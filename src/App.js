@@ -19,9 +19,8 @@ import {
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
 
-// From ChatGPT:
 import {Amplify} from 'aws-amplify';
-import awsExports from './aws-exports'; // The path may vary
+import awsExports from './aws-exports';
 import { generateClient } from 'aws-amplify/api';
 
 Amplify.configure(awsExports);
@@ -33,21 +32,22 @@ const App = ({ signOut }) => {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+}, []);
 
-  async function fetchNotes() {
-    const apiData = await client.graphql({ query: listNotes });
-    const notesFromAPI = apiData.data.listNotes.items;
-    await Promise.all(
-      notesFromAPI.map(async (note) => {
-        if (note.image) {
-          const url = await getUrl({key: note.id});
-          note.image = url;
-        } return note;
-      })
-    );
-    setNotes(notesFromAPI);
-  }
+
+async function fetchNotes() {
+  const apiData = await client.graphql({ query: listNotes });
+  const notesFromAPI = apiData.data.listNotes.items;
+  await Promise.all(
+    notesFromAPI.map(async (note) => {
+      if (note.image) {
+        const url = await getUrl({key: note.id});
+        note.image = url;
+      } return note;
+    })
+  );
+  setNotes(notesFromAPI);
+}
 
   async function createNote(event) {
     event.preventDefault();
@@ -79,13 +79,21 @@ const App = ({ signOut }) => {
 
   return (
     <View className="App">
-      <Heading level={1}>My Notes App</Heading>
+
+      <Heading level={1}>SCSU MARKETPLACE</Heading>
+      <Button onClick={signOut}>Sign Out</Button>
+
+
+
+      <Heading level={2}>Sell an Item</Heading>
+      
+      
       <View as="form" margin="3rem 0" onSubmit={createNote}>
     	<Flex direction="row" justifyContent="center">
           <TextField
             name="name"
-            placeholder="Note Name"
-            label="Note Name"
+            placeholder="Item Name"
+            label="Item Name"
             labelHidden
             variation="quiet"
             required
@@ -109,7 +117,10 @@ const App = ({ signOut }) => {
           </Button>
         </Flex>
       </View>
-      <Heading level={2}>Current Notes</Heading>
+
+
+      
+      <Heading level={2}>Items for Sale</Heading>
       <View margin="3rem 0">
         {notes.map((note) => (
         <Flex
@@ -119,23 +130,27 @@ const App = ({ signOut }) => {
           alignItems="center"
         >
     	  <Text as="strong" fontWeight={700}>
-            {note.name}
-          </Text>
-          <Text as="span">{note.description}</Text>
+          {note.name}
+        </Text>
+
+        <Text as="span">{note.description}</Text>
           {note.image && (
-            <Image
+          <Image
               src={note.image.url.href}
               alt={`visual aid for ${note.name}`}
               style={{ width: 400 }}
-            />
+          />
           )}
+
+          //need code to only display delete button if user is the owner of the item
           <Button variation="link" onClick={() => deleteNote(note)}>
-            Delete note
+            Delete Item
           </Button>
+       
+       
         </Flex>
       ))}
-      </View>
-      <Button onClick={signOut}>Sign Out</Button>
+      </View> 
     </View>
   );
 };
