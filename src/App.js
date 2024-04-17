@@ -18,21 +18,25 @@ import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
+import { Amplify } from 'aws-amplify';
 
-import {Amplify} from 'aws-amplify';
 import awsExports from './aws-exports';
 import { generateClient } from 'aws-amplify/api';
 
+
 Amplify.configure(awsExports);
+
 
 const client = generateClient();
 
 const App = ({ signOut }) => {
+
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     fetchNotes();
-}, []);
+  }, []);
+
 
 
 async function fetchNotes() {
@@ -57,7 +61,7 @@ async function fetchNotes() {
       name: form.get("name"),
       description: form.get("description"),
       image: image.name,
-      price: form.get("price")
+      price: form.get("price"),
     };
     const result=await client.graphql({
       query: createNoteMutation,
@@ -132,6 +136,7 @@ async function fetchNotes() {
 
       
       <Heading level={2}>Items for Sale</Heading>
+
       <View margin="3rem 0">
         {notes.map((note) => (
         <Flex
