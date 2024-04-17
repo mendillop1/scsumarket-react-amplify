@@ -56,7 +56,8 @@ async function fetchNotes() {
     const data = {
       name: form.get("name"),
       description: form.get("description"),
-      image: image.name
+      image: image.name,
+      price: form.get("price")
     };
     const result=await client.graphql({
       query: createNoteMutation,
@@ -100,12 +101,22 @@ async function fetchNotes() {
           />
           <TextField
             name="description"
-            placeholder="Note Description"
-            label="Note Description"
+            placeholder="Item Description"
+            label="Item Description"
             labelHidden
             variation="quiet"
             required
           />
+
+          <TextField
+            name="price"
+            placeholder="Item Price"
+            label="Item Price"
+            labelHidden
+            variation="quiet"
+            required
+          />
+
           <View
             name="image"
             as="input"
@@ -113,7 +124,7 @@ async function fetchNotes() {
             style={{ alignSelf: "end" }}
           />
           <Button type="submit" variation="primary">
-            Create Note
+            List Item
           </Button>
         </Flex>
       </View>
@@ -133,6 +144,10 @@ async function fetchNotes() {
           {note.name}
         </Text>
 
+        <Text as="strong">
+          ${note.price}
+        </Text>
+
         <Text as="span">{note.description}</Text>
           {note.image && (
           <Image
@@ -140,9 +155,8 @@ async function fetchNotes() {
               alt={`visual aid for ${note.name}`}
               style={{ width: 400 }}
           />
-          )}
+        )}
 
-          //need code to only display delete button if user is the owner of the item
           <Button variation="link" onClick={() => deleteNote(note)}>
             Delete Item
           </Button>
