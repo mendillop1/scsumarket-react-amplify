@@ -19,9 +19,9 @@ import {
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
 import { Amplify } from 'aws-amplify';
-
 import awsExports from './aws-exports';
 import { generateClient } from 'aws-amplify/api';
+import { getCurrentUser } from "aws-amplify/auth";
 
 
 Amplify.configure(awsExports);
@@ -36,6 +36,17 @@ const App = ({ signOut }) => {
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  async function handleFetchUserAttributes() {
+    try {
+      const userAttributes = await getCurrentUser();
+      console.log(userAttributes);
+      return userAttributes.username;
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
 
 
@@ -55,6 +66,7 @@ async function fetchNotes() {
 
   async function createNote(event) {
     event.preventDefault();
+    const user = await handleFetchUserAttributes(); 
     const form = new FormData(event.target);
     const image = form.get("image");
     const data = {
@@ -62,6 +74,8 @@ async function fetchNotes() {
       description: form.get("description"),
       image: image.name,
       price: form.get("price"),
+      owner: user
+      
     };
     const result=await client.graphql({
       query: createNoteMutation,
@@ -151,6 +165,10 @@ async function fetchNotes() {
 
         <Text as="strong">
           ${note.price}
+        </Text>
+
+        <Text as="strong">
+          Seller: {note.owner}
         </Text>
 
         <Text as="span">{note.description}</Text>
