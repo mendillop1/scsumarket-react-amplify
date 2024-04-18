@@ -28,12 +28,16 @@ export default function NoteUpdateForm(props) {
     name: "",
     description: "",
     image: "",
+    price: "",
+    owner: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
   const [image, setImage] = React.useState(initialValues.image);
+  const [price, setPrice] = React.useState(initialValues.price);
+  const [owner, setOwner] = React.useState(initialValues.owner);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = noteRecord
@@ -42,6 +46,8 @@ export default function NoteUpdateForm(props) {
     setName(cleanValues.name);
     setDescription(cleanValues.description);
     setImage(cleanValues.image);
+    setPrice(cleanValues.price);
+    setOwner(cleanValues.owner);
     setErrors({});
   };
   const [noteRecord, setNoteRecord] = React.useState(noteModelProp);
@@ -62,8 +68,10 @@ export default function NoteUpdateForm(props) {
   React.useEffect(resetStateValues, [noteRecord]);
   const validations = {
     name: [{ type: "Required" }],
-    description: [],
+    description: [{ type: "Required" }],
     image: [],
+    price: [{ type: "Required" }],
+    owner: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -92,8 +100,10 @@ export default function NoteUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          description: description ?? null,
+          description,
           image: image ?? null,
+          price,
+          owner: owner ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -157,6 +167,8 @@ export default function NoteUpdateForm(props) {
               name: value,
               description,
               image,
+              price,
+              owner,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -173,7 +185,7 @@ export default function NoteUpdateForm(props) {
       ></TextField>
       <TextField
         label="Description"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={description}
         onChange={(e) => {
@@ -183,6 +195,8 @@ export default function NoteUpdateForm(props) {
               name,
               description: value,
               image,
+              price,
+              owner,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -209,6 +223,8 @@ export default function NoteUpdateForm(props) {
               name,
               description,
               image: value,
+              price,
+              owner,
             };
             const result = onChange(modelFields);
             value = result?.image ?? value;
@@ -222,6 +238,62 @@ export default function NoteUpdateForm(props) {
         errorMessage={errors.image?.errorMessage}
         hasError={errors.image?.hasError}
         {...getOverrideProps(overrides, "image")}
+      ></TextField>
+      <TextField
+        label="Price"
+        isRequired={true}
+        isReadOnly={false}
+        value={price}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image,
+              price: value,
+              owner,
+            };
+            const result = onChange(modelFields);
+            value = result?.price ?? value;
+          }
+          if (errors.price?.hasError) {
+            runValidationTasks("price", value);
+          }
+          setPrice(value);
+        }}
+        onBlur={() => runValidationTasks("price", price)}
+        errorMessage={errors.price?.errorMessage}
+        hasError={errors.price?.hasError}
+        {...getOverrideProps(overrides, "price")}
+      ></TextField>
+      <TextField
+        label="Owner"
+        isRequired={false}
+        isReadOnly={false}
+        value={owner}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image,
+              price,
+              owner: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.owner ?? value;
+          }
+          if (errors.owner?.hasError) {
+            runValidationTasks("owner", value);
+          }
+          setOwner(value);
+        }}
+        onBlur={() => runValidationTasks("owner", owner)}
+        errorMessage={errors.owner?.errorMessage}
+        hasError={errors.owner?.hasError}
+        {...getOverrideProps(overrides, "owner")}
       ></TextField>
       <Flex
         justifyContent="space-between"
