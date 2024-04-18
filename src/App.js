@@ -1,4 +1,9 @@
-// From: https://aws.amazon.com/getting-started/hands-on/build-react-app-amplify-graphql/module-two/?e=gs2020&p=build-a-react-app
+import { Amplify } from "aws-amplify";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+
+import "./styles.css";
+
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
@@ -18,18 +23,14 @@ import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
-import { Amplify } from 'aws-amplify';
-
 import awsExports from './aws-exports';
 import { generateClient } from 'aws-amplify/api';
-
-
-Amplify.configure(awsExports);
-
+import { getCurrentUser } from "aws-amplify/auth";
 
 const client = generateClient();
+Amplify.configure(awsExports);
 
-const App = ({ signOut }) => {
+export function App({ signOut, user }) {
 
   const [notes, setNotes] = useState([]);
 
@@ -37,24 +38,35 @@ const App = ({ signOut }) => {
     fetchNotes();
   }, []);
 
+  async function handleFetchUserAttributes() {
+    try {
+      const userAttributes = await getCurrentUser();
+      console.log(userAttributes);
+      return userAttributes.username;
+    } catch (error) {
+      console.log(error);
+    }
 
+  }
 
-async function fetchNotes() {
-  const apiData = await client.graphql({ query: listNotes });
-  const notesFromAPI = apiData.data.listNotes.items;
-  await Promise.all(
-    notesFromAPI.map(async (note) => {
-      if (note.image) {
-        const url = await getUrl({key: note.id});
-        note.image = url;
-      } return note;
-    })
-  );
-  setNotes(notesFromAPI);
-}
+  async function fetchNotes() {
+    const apiData = await client.graphql({ query: listNotes });
+    const notesFromAPI = apiData.data.listNotes.items;
+    await Promise.all(
+      notesFromAPI.map(async (note) => {
+        if (note.image) {
+          const url = await getUrl({key: note.id});
+          note.image = url;
+        } return note;
+      })
+    );
+    setNotes(notesFromAPI);
+  }
+
 
   async function createNote(event) {
     event.preventDefault();
+    const user = await handleFetchUserAttributes(); 
     const form = new FormData(event.target);
     const image = form.get("image");
     const data = {
@@ -62,6 +74,8 @@ async function fetchNotes() {
       description: form.get("description"),
       image: image.name,
       price: form.get("price"),
+      owner: user
+      
     };
     const result=await client.graphql({
       query: createNoteMutation,
@@ -81,7 +95,7 @@ async function fetchNotes() {
       variables: { input: { id } },
     });
   }
-
+  
   return (
     <View className="App">
 
@@ -153,6 +167,10 @@ async function fetchNotes() {
           ${note.price}
         </Text>
 
+        <Text as="strong">
+          Seller: {note.owner}
+        </Text>
+
         <Text as="span">{note.description}</Text>
           {note.image && (
           <Image
@@ -174,4 +192,15 @@ async function fetchNotes() {
   );
 };
 
-export default withAuthenticator(App);
+
+
+
+
+
+
+export default withAuthenticator(App, {
+  components: {
+    Header,
+    Footer
+  }
+});
