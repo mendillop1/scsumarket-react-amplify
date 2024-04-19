@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+.Menu {
+  align-items: center;
+  float:right;
+  padding-top:10px;
+  padding-right: 10px;;
+}

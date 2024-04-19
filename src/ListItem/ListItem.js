@@ -1,36 +1,32 @@
 import { Amplify } from "aws-amplify";
-import { Header } from "./Login/Header";
-import { Footer } from "./Login/Footer";
 import React, { useState, useEffect } from "react";
 import "@aws-amplify/ui-react/styles.css";
 import { uploadData, getUrl, remove } from 'aws-amplify/storage';
 import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  TextField,
   View,
-  withAuthenticator,
-  Menu,
-  MenuItem
 } from "@aws-amplify/ui-react";
-import { listNotes } from "./graphql/queries";
+import { listNotes } from "../graphql/queries";
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
-} from "./graphql/mutations";
-import awsExports from './aws-exports';
+} from "../graphql/mutations";
+import awsExports from '../aws-exports';
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from "aws-amplify/auth";
-import { Navbar } from "./Navbar/Navbar";
-import "./App.css"; 
+
 
 const client = generateClient();
 Amplify.configure(awsExports);
 
-export function App({ signOut, user }) {
+export function ListItem() {
 
   const [notes, setNotes] = useState([]);
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
 
   async function fetchNotes() {
     const apiData = await client.graphql({ query: listNotes });
@@ -45,7 +41,6 @@ export function App({ signOut, user }) {
     );
     setNotes(notesFromAPI);
   }
-
 
   async function createNote(event) {
     event.preventDefault();
@@ -70,38 +65,57 @@ export function App({ signOut, user }) {
     event.target.reset();
   } 
 
-  async function deleteNote({ id, name }) {
-    const newNotes = notes.filter((note) => note.id !== id);
-    setNotes(newNotes);
-    await remove({key:id});
-    await client.graphql({
-      query: deleteNoteMutation,
-      variables: { input: { id } },
-    });
-  }
  
   
   return (
     <View className="App">
+      <Heading level={2}>Sell an Item</Heading>
+      
+      
+      <View as="form" margin="3rem 0" onSubmit={createNote}>
+    	<Flex direction="row" justifyContent="center">
+          <TextField
+            name="name"
+            placeholder="Item Name"
+            label="Item Name"
+            labelHidden
+            variation="quiet"
+            required
+          />
+          <TextField
+            name="description"
+            placeholder="Item Description"
+            label="Item Description"
+            labelHidden
+            variation="quiet"
+            required
+          />
 
-      <View className="Menu">
-      <Menu>
-        <MenuItem onClick={signOut}>Sign Out</MenuItem>
- 
-      </Menu> 
+          <TextField
+            name="price"
+            placeholder="Item Price"
+            label="Item Price"
+            labelHidden
+            variation="quiet"
+            required
+          />
+
+          <View
+            name="image"
+            as="input"
+            type="file"
+            style={{ alignSelf: "end" }}
+          />
+          <Button type="submit" variation="primary">
+            List Item
+          </Button>
+        </Flex>
       </View>
-
-      <Navbar notes={notes}/>
 
     </View>
   );
 };
 
 
-export default withAuthenticator(App, {
-  components: {
-    Header,
-    Footer
-  }
+export default ListItem;
 
-});
