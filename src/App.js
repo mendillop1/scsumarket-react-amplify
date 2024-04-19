@@ -1,4 +1,3 @@
-// From: https://aws.amazon.com/getting-started/hands-on/build-react-app-amplify-graphql/module-two/?e=gs2020&p=build-a-react-app
 import React, { useState, useEffect } from "react";
 import { Footer } from "./Login/Footer"; 
 import { Header } from "./Login/Header";
@@ -24,9 +23,10 @@ import {
 } from "./graphql/mutations";
 
 import {Amplify} from 'aws-amplify';
-import awsExports from './aws-exports'; // The path may vary
+import awsExports from './aws-exports'; 
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from "aws-amplify/auth";
+import image_top from "./fit-3.png"; 
 
 const client = generateClient();
 Amplify.configure(awsExports);
@@ -90,9 +90,14 @@ export function App({ signOut }) {
   return (
 
     <View className="App">
+      <Image
+      alt="logo"
+      src={image_top}
+      height={"200px"}
+      width={"300px"}
+     />
 
-      <Heading level={1}>SCSU MARKETPLACE</Heading> 
-
+    <Button onClick={signOut} variation="primary" >Sign Out </Button>
 
     <Tabs className='Tabs'
       defaultValue={'Buy'}
@@ -101,7 +106,7 @@ export function App({ signOut }) {
               <Collection
                 type="grid"
                 templateColumns="1fr 1fr 1fr"
-                gap="15px"
+                gap="10px"
                 items={notes.map((note) => ({
                 ...note,
                 key: note.id,
@@ -127,9 +132,8 @@ export function App({ signOut }) {
 
                 {(note) => (
                 <Button grow="1" key={note.id}>
-                    {note.name} ${note.price} {note.owner} {note.description}
-          
-                    <Image
+                
+                    {note.name} ${note.price}        <Image
                       src= {note.image.url.href }
                       alt={notes.name}
                       style={{ width: 400 }}
