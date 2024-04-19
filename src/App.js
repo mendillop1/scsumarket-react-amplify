@@ -1,30 +1,37 @@
-import { Amplify } from "aws-amplify";
-import { Header } from "./Login/Header";
-import { Footer } from "./Login/Footer";
+// From: https://aws.amazon.com/getting-started/hands-on/build-react-app-amplify-graphql/module-two/?e=gs2020&p=build-a-react-app
 import React, { useState, useEffect } from "react";
+import { Footer } from "./Login/Footer"; 
+import { Header } from "./Login/Header";
+import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
 import { uploadData, getUrl, remove } from 'aws-amplify/storage';
 import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  TextField,
+  Tabs,
   View,
   withAuthenticator,
-  Menu,
-  MenuItem
+  Collection
 } from "@aws-amplify/ui-react";
 import { listNotes } from "./graphql/queries";
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
-import awsExports from './aws-exports';
+
+import {Amplify} from 'aws-amplify';
+import awsExports from './aws-exports'; // The path may vary
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from "aws-amplify/auth";
-import { Navbar } from "./Navbar/Navbar";
-import "./App.css"; 
 
 const client = generateClient();
 Amplify.configure(awsExports);
 
-export function App({ signOut, user }) {
+export function App({ signOut }) {
 
   const [notes, setNotes] = useState([]);
 
@@ -45,7 +52,6 @@ export function App({ signOut, user }) {
     );
     setNotes(notesFromAPI);
   }
-
 
   async function createNote(event) {
     event.preventDefault();
@@ -82,21 +88,118 @@ export function App({ signOut, user }) {
  
   
   return (
+
     <View className="App">
 
-      <View className="Menu">
-      <Menu>
-        <MenuItem onClick={signOut}>Sign Out</MenuItem>
- 
-      </Menu> 
-      </View>
+      <Heading level={1}>SCSU MARKETPLACE</Heading> 
 
-      <Navbar notes={notes}/>
+
+    <Tabs className='Tabs'
+      defaultValue={'Buy'}
+      items={[
+        { label: 'Buy', value: 'Buy', content: 
+              <Collection
+                type="grid"
+                templateColumns="1fr 1fr 1fr"
+                gap="15px"
+                items={notes.map((note) => ({
+                ...note,
+                key: note.id,
+                name: note.name,
+                image: note.image,
+                price: note.price,
+                owner: note.owner
+                }))}
+                isSearchable
+                isPaginated
+                itemsPerPage={12}
+                searchNoResultsFound={
+                <Flex justifyContent="center">
+                   <Text color="red.80" fontSize="1rem">
+                      Nothing found, please try again
+                  </Text>
+                </Flex>}
+        
+                searchPlaceholder="Type to search..."
+                searchFilter={(notes, keyword) =>
+                notes.name.toLowerCase().startsWith(keyword.toLowerCase())
+                }>
+
+                {(note) => (
+                <Button grow="1" key={note.id}>
+                    {note.name} ${note.price} {note.owner} {note.description}
+          
+                    <Image
+                      src= {note.image.url.href }
+                      alt={notes.name}
+                      style={{ width: 400 }}
+                    />
+         
+                </Button>)}
+              </Collection>,},
+            
+            
+            
+            { label: 'Sell', value: 'Sell', content:
+
+            <View className="App">
+            <Heading level={2}>Sell an Item</Heading>
+            
+            
+            <View as="form" margin="3rem 0" onSubmit={createNote}>
+            <Flex direction="row" justifyContent="center">
+                <TextField
+                  name="name"
+                  placeholder="Item Name"
+                  label="Item Name"
+                  labelHidden
+                  variation="quiet"
+                  required
+                />
+                <TextField
+                  name="description"
+                  placeholder="Item Description"
+                  label="Item Description"
+                  labelHidden
+                  variation="quiet"
+                  required
+                />
+      
+                <TextField
+                  name="price"
+                  placeholder="Item Price"
+                  label="Item Price"
+                  labelHidden
+                  variation="quiet"
+                  required
+                />
+      
+                <View
+                  name="image"
+                  as="input"
+                  type="file"
+                  style={{ alignSelf: "end" }}
+                />
+                <Button type="submit" variation="primary">
+                  List Item
+                </Button>
+              </Flex>
+            </View>
+      
+          </View>
+          
+          
+          }]}
+              
+    
+              
+    />
+
+
 
     </View>
   );
 };
-
 
 export default withAuthenticator(App, {
   components: {
