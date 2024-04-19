@@ -1,5 +1,5 @@
 import { Image, useTheme } from "@aws-amplify/ui-react";
-import image from "./fit-2.png";
+import image from "./logo.png";
 
 export function Header() {
   const { tokens } = useTheme();
