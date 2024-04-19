@@ -38,17 +38,6 @@ export function App({ signOut, user }) {
     fetchNotes();
   }, []);
 
-  async function handleFetchUserAttributes() {
-    try {
-      const userAttributes = await getCurrentUser();
-      console.log(userAttributes);
-      return userAttributes.username;
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
-
   async function fetchNotes() {
     const apiData = await client.graphql({ query: listNotes });
     const notesFromAPI = apiData.data.listNotes.items;
@@ -66,7 +55,8 @@ export function App({ signOut, user }) {
 
   async function createNote(event) {
     event.preventDefault();
-    const user = await handleFetchUserAttributes(); 
+    const user = await getCurrentUser();
+    console.log(user);
     const form = new FormData(event.target);
     const image = form.get("image");
     const data = {
@@ -74,7 +64,7 @@ export function App({ signOut, user }) {
       description: form.get("description"),
       image: image.name,
       price: form.get("price"),
-      owner: user
+      owner: user.username
       
     };
     const result=await client.graphql({
@@ -191,9 +181,6 @@ export function App({ signOut, user }) {
     </View>
   );
 };
-
-
-
 
 
 

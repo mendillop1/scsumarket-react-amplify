@@ -1,5 +1,12 @@
 {
   "AppSyncApiName": "scsumarketreactampli",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authscsumarketreactampli0a667d20",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2024-04-18T17:29:26.733Z"
 }

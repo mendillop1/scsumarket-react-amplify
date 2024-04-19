@@ -1,4 +1,5 @@
 import { Image, useTheme } from "@aws-amplify/ui-react";
+import image from "./fit-2.png";
 
 export function Header() {
   const { tokens } = useTheme();
@@ -6,7 +7,7 @@ export function Header() {
   return (
     <Image
       alt="logo"
-      src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
+      src={image}
       padding={tokens.space.medium}
     />
   );
