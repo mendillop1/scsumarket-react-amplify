@@ -110,6 +110,16 @@ export function App({ signOut }) {
     marginBottom: "20px",
     paddingLeft: "100px",  
   };  
+
+  const button_style = {
+    float: "right"
+  };  
+
+  const image_style = { 
+    width: "400px",
+    height: "200px",
+    paddingLeft: "100px",
+  };
  
   
   return (
@@ -118,11 +128,14 @@ export function App({ signOut }) {
       <Image
       alt="logo"
       src={image_top}
-      height={"200px"}
-      width={"300px"}
+      style={image_style}
+
      />
 
-    <Button onClick={signOut} variation="primary" >Sign Out </Button>
+    <Button onClick={signOut} variation="primary" style={button_style}>Sign Out 
+    
+    
+    </Button>
 
     <Tabs className='Tabs'
       defaultValue={'Buy'}
@@ -200,12 +213,12 @@ export function App({ signOut }) {
                 <TextField
                   style={text_field_style}
                   name="price"
-                  label="Item Price"
+                  label="Price $"
                   required
                 />
             </Flex>
 
-
+            Upload a Picture
             <Flex>
                 <View
                   style={image_upload_style}
