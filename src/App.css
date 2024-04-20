@@ -37,5 +37,14 @@
   }
 }
 .App {
+
   margin:10px;
 }
+
+.Sell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+} 

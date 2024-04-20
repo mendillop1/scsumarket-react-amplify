@@ -14,7 +14,8 @@ import {
   Tabs,
   View,
   withAuthenticator,
-  Collection
+  Collection,
+  TextAreaField
 } from "@aws-amplify/ui-react";
 import { listNotes } from "./graphql/queries";
 import {
@@ -73,6 +74,7 @@ export function App({ signOut }) {
     });
     if (!!data.image) await uploadData({key:result.data.createNote.id, data:image}).result;
     fetchNotes();
+    alert("Item listed successfully!");
     event.target.reset();
   } 
 
@@ -85,6 +87,29 @@ export function App({ signOut }) {
       variables: { input: { id } },
     });
   }
+
+  const form_style = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    margin: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxShadow: "2px 2px 6px 2px #ccc",
+    width: "400px",
+  };
+
+  const text_field_style = {
+    marginBottom: "20px",
+
+  };
+
+  const image_upload_style = {
+    marginBottom: "20px",
+    paddingLeft: "100px",  
+  };  
  
   
   return (
@@ -146,44 +171,54 @@ export function App({ signOut }) {
             
             { label: 'Sell', value: 'Sell', content:
 
-            <View className="App">
+            <View className="Sell">
             <Heading level={2}>Sell an Item</Heading>
             
             
-            <View as="form" margin="3rem 0" onSubmit={createNote}>
-            <Flex direction="row" justifyContent="center">
+            <View as="form" margin="3rem 0" onSubmit={createNote} style={form_style}>
+
+            <Flex >
                 <TextField
+                  style={text_field_style}
                   name="name"
-                  placeholder="Item Name"
                   label="Item Name"
-                  labelHidden
-                  variation="quiet"
                   required
                 />
-                <TextField
+
+            </Flex>
+
+            <Flex>
+                <TextAreaField
+                  style={text_field_style}
                   name="description"
-                  placeholder="Item Description"
                   label="Item Description"
-                  labelHidden
-                  variation="quiet"
                   required
                 />
-      
+            </Flex>
+
+            <Flex>
                 <TextField
+                  style={text_field_style}
                   name="price"
-                  placeholder="Item Price"
                   label="Item Price"
-                  labelHidden
-                  variation="quiet"
                   required
                 />
-      
+            </Flex>
+
+
+            <Flex>
                 <View
-                  name="image"
+                  style={image_upload_style}
                   as="input"
+                  name="image"
                   type="file"
-                  style={{ alignSelf: "end" }}
+                  label="Item Image"
+                  required
                 />
+            </Flex>
+            
+            
+            <Flex>
                 <Button type="submit" variation="primary">
                   List Item
                 </Button>
