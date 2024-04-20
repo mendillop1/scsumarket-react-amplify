@@ -131,6 +131,12 @@ export function App({ signOut }) {
     boxShadow: "2px 2px 6px 2px #ccc",
   };
 
+  const item_image_style = {
+    width: "80%",
+    height: "80%",
+    borderRadius: "8px",
+  };
+
   
   return (
 
@@ -181,14 +187,18 @@ export function App({ signOut }) {
 
                 {(note) => (
                 <Button grow="1" key={note.id} style={buttonStyle}>
-                
-                    {note.name} ${note.price}        
+
+                  <View>
+                    {note.name} <br></br>${note.price}    
+
+              
                     <Image
                       src= {note.image.url.href }
                       alt={notes.name}
-                      style={{ width: "80%", height: "80%"}}
-                    />
-         
+                      style={item_image_style}
+                     />
+                  </View>
+
                 </Button>)}
               </Collection>,},
             
