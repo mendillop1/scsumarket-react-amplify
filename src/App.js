@@ -107,6 +107,7 @@ export function App({ signOut }) {
   };
 
   const image_upload_style = {
+
     marginBottom: "20px",
     paddingLeft: "100px",  
   };  
@@ -117,11 +118,19 @@ export function App({ signOut }) {
 
   const image_style = { 
     width: "400px",
-    height: "200px",
-    paddingLeft: "100px",
+ 
   };
 
- 
+  const buttonStyle = {
+    width: "400px",
+    height: "400px",
+    margin: "20px",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxShadow: "2px 2px 6px 2px #ccc",
+  };
+
   
   return (
 
@@ -143,7 +152,8 @@ export function App({ signOut }) {
       items={[
         { label: 'Buy', value: 'Buy', content: 
               <Collection
-                type="grid"
+                wrap="wrap" 
+                direction=  "row"
                 templateColumns="1fr 1fr 1fr"
                 gap="10px"
                 items={notes.map((note) => ({
@@ -170,13 +180,13 @@ export function App({ signOut }) {
                 }>
 
                 {(note) => (
-                <Button grow="1" key={note.id}>
+                <Button grow="1" key={note.id} style={buttonStyle}>
                 
                     {note.name} ${note.price}        
                     <Image
                       src= {note.image.url.href }
                       alt={notes.name}
-                      style={{ width: 400 }}
+                      style={{ width: "80%", height: "80%"}}
                     />
          
                 </Button>)}
