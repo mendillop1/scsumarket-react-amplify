@@ -99,6 +99,7 @@ export function App({ signOut }) {
     borderRadius: "5px",
     boxShadow: "2px 2px 6px 2px #ccc",
     width: "400px",
+    maxWidth: "80%",
   };
 
   const text_field_style = {
@@ -114,6 +115,7 @@ export function App({ signOut }) {
 
   const button_style = {
     float: "right"
+
   };  
 
   const image_style = { 
@@ -129,6 +131,7 @@ export function App({ signOut }) {
     border: "1px solid #ccc",
     borderRadius: "5px",
     boxShadow: "2px 2px 6px 2px #ccc",
+    maxWidth: "100%",
   };
 
   const item_image_style = {
