@@ -1,4 +1,3 @@
-// From: https://aws.amazon.com/getting-started/hands-on/build-react-app-amplify-graphql/module-two/?e=gs2020&p=build-a-react-app
 import React, { useState, useEffect } from "react";
 import { Footer } from "./Login/Footer"; 
 import { Header } from "./Login/Header";
@@ -15,7 +14,8 @@ import {
   Tabs,
   View,
   withAuthenticator,
-  Collection
+  Collection,
+  TextAreaField
 } from "@aws-amplify/ui-react";
 import { listNotes } from "./graphql/queries";
 import {
@@ -24,9 +24,10 @@ import {
 } from "./graphql/mutations";
 
 import {Amplify} from 'aws-amplify';
-import awsExports from './aws-exports'; // The path may vary
+import awsExports from './aws-exports'; 
 import { generateClient } from 'aws-amplify/api';
 import { getCurrentUser } from "aws-amplify/auth";
+import image_top from "./fit-3.png"; 
 
 const client = generateClient();
 Amplify.configure(awsExports);
@@ -73,6 +74,7 @@ export function App({ signOut }) {
     });
     if (!!data.image) await uploadData({key:result.data.createNote.id, data:image}).result;
     fetchNotes();
+    alert("Item listed successfully!");
     event.target.reset();
   } 
 
@@ -85,23 +87,95 @@ export function App({ signOut }) {
       variables: { input: { id } },
     });
   }
+
+  const form_style = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    margin: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxShadow: "2px 2px 6px 2px #ccc",
+    width: "400px",
+    maxWidth: "80%",
+  };
+
+  const text_field_style = {
+    marginBottom: "20px",
+
+  };
+
+  const image_upload_style = {
+
+    marginBottom: "20px",
+    paddingLeft: "100px",  
+  };  
+
+  const button_style = {
+    float: "right"
+
+  };  
+
+  const image_style = { 
+    width: "400px",
+    heigh: "400px"
  
+  };
+
+  const buttonStyle = {
+    width: "400px",
+    height: "400px",
+    margin: "20px",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxShadow: "2px 2px 6px 2px #ccc",
+    maxWidth: "90%",
+   
+  };
+
+  const item_image_style = {
+    width: "300px",
+    height: "300px",
+    borderRadius: "8px",
+  };
+  
+  const button_content = {  
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "400px",
+    maxWidth: "80%",
+  };
+
   
   return (
 
     <View className="App">
+      <Image
+      alt="logo"
+      src={image_top}
+      style={image_style}
 
-      <Heading level={1}>SCSU MARKETPLACE</Heading> 
+     />
 
+    <Button onClick={signOut} variation="primary" style={button_style}>Sign Out 
+    
+    
+    </Button>
 
     <Tabs className='Tabs'
       defaultValue={'Buy'}
       items={[
         { label: 'Buy', value: 'Buy', content: 
               <Collection
-                type="grid"
+                wrap="wrap" 
+                direction=  "row"
                 templateColumns="1fr 1fr 1fr"
-                gap="15px"
+                gap="10px"
                 items={notes.map((note) => ({
                 ...note,
                 key: note.id,
@@ -126,15 +200,23 @@ export function App({ signOut }) {
                 }>
 
                 {(note) => (
-                <Button grow="1" key={note.id}>
-                    {note.name} ${note.price} {note.owner} {note.description}
-          
+                <Button grow="1" key={note.id} style={buttonStyle}>
+
+                  <View style={button_content}>
+                    {note.name}    |
+
+                    ${note.price}    
+
+               
+
+                  
                     <Image
                       src= {note.image.url.href }
                       alt={notes.name}
-                      style={{ width: 400 }}
-                    />
-         
+                      style={item_image_style}
+                     />
+                  </View>
+
                 </Button>)}
               </Collection>,},
             
@@ -142,44 +224,54 @@ export function App({ signOut }) {
             
             { label: 'Sell', value: 'Sell', content:
 
-            <View className="App">
+            <View className="Sell">
             <Heading level={2}>Sell an Item</Heading>
             
             
-            <View as="form" margin="3rem 0" onSubmit={createNote}>
-            <Flex direction="row" justifyContent="center">
+            <View as="form" margin="3rem 0" onSubmit={createNote} style={form_style}>
+
+            <Flex >
                 <TextField
+                  style={text_field_style}
                   name="name"
-                  placeholder="Item Name"
                   label="Item Name"
-                  labelHidden
-                  variation="quiet"
                   required
                 />
+
+            </Flex>
+
+            <Flex>
                 <TextField
-                  name="description"
-                  placeholder="Item Description"
-                  label="Item Description"
-                  labelHidden
-                  variation="quiet"
-                  required
-                />
-      
-                <TextField
+                  style={text_field_style}
                   name="price"
-                  placeholder="Item Price"
-                  label="Item Price"
-                  labelHidden
-                  variation="quiet"
+                  label="Price $"
                   required
                 />
-      
-                <View
-                  name="image"
-                  as="input"
-                  type="file"
-                  style={{ alignSelf: "end" }}
+            </Flex>
+
+            <Flex>
+                <TextAreaField
+                  style={text_field_style}
+                  name="description"
+                  label="Item Description"
+                  required
                 />
+            </Flex>
+
+            Upload a Picture
+            <Flex>
+                <View
+                  style={image_upload_style}
+                  as="input"
+                  name="image"
+                  type="file"
+                  label="Item Image"
+                  required
+                />
+            </Flex>
+            
+            
+            <Flex>
                 <Button type="submit" variation="primary">
                   List Item
                 </Button>
@@ -187,16 +279,10 @@ export function App({ signOut }) {
             </View>
       
           </View>
-          
-          
+        
           }]}
               
-    
-              
     />
-
-
-
     </View>
   );
 };

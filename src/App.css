@@ -36,9 +36,15 @@
     transform: rotate(360deg);
   }
 }
-.Menu {
-  align-items: center;
-  float:right;
-  padding-top:10px;
-  padding-right: 10px;;
+.App {
+
+  margin:10px;
 }
+
+.Sell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+} 
