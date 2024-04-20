@@ -120,6 +120,7 @@ export function App({ signOut }) {
     height: "200px",
     paddingLeft: "100px",
   };
+
  
   
   return (
@@ -171,7 +172,8 @@ export function App({ signOut }) {
                 {(note) => (
                 <Button grow="1" key={note.id}>
                 
-                    {note.name} ${note.price}        <Image
+                    {note.name} ${note.price}        
+                    <Image
                       src= {note.image.url.href }
                       alt={notes.name}
                       style={{ width: 400 }}
@@ -201,19 +203,19 @@ export function App({ signOut }) {
             </Flex>
 
             <Flex>
-                <TextAreaField
+                <TextField
                   style={text_field_style}
-                  name="description"
-                  label="Item Description"
+                  name="price"
+                  label="Price $"
                   required
                 />
             </Flex>
 
             <Flex>
-                <TextField
+                <TextAreaField
                   style={text_field_style}
-                  name="price"
-                  label="Price $"
+                  name="description"
+                  label="Item Description"
                   required
                 />
             </Flex>
