@@ -120,6 +120,7 @@ export function App({ signOut }) {
 
   const image_style = { 
     width: "400px",
+    heigh: "400px"
  
   };
 
@@ -131,13 +132,23 @@ export function App({ signOut }) {
     border: "1px solid #ccc",
     borderRadius: "5px",
     boxShadow: "2px 2px 6px 2px #ccc",
-    maxWidth: "100%",
+    maxWidth: "90%",
+   
   };
 
   const item_image_style = {
-    width: "80%",
-    height: "80%",
+    width: "300px",
+    height: "300px",
     borderRadius: "8px",
+  };
+  
+  const button_content = {  
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "400px",
+    maxWidth: "80%",
   };
 
   
@@ -191,10 +202,14 @@ export function App({ signOut }) {
                 {(note) => (
                 <Button grow="1" key={note.id} style={buttonStyle}>
 
-                  <View>
-                    {note.name} <br></br>${note.price}    
+                  <View style={button_content}>
+                    {note.name}    |
 
-              
+                    ${note.price}    
+
+               
+
+                  
                     <Image
                       src= {note.image.url.href }
                       alt={notes.name}
@@ -264,16 +279,10 @@ export function App({ signOut }) {
             </View>
       
           </View>
-          
-          
+        
           }]}
               
-    
-              
     />
-
-
-
     </View>
   );
 };
