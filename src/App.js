@@ -30,7 +30,6 @@ return   (
   <Router>
     <Flex>
       <ReactRouterLink to="/" component={Link}>Home</ReactRouterLink>
-      <ReactRouterLink to="/item/:id" component={Link}>ItemView</ReactRouterLink>
  
     </Flex>
 

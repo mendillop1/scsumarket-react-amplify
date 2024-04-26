@@ -127,7 +127,8 @@ export function Homepage({ signOut }) {
 
   };  
 
-  const image_style = { 
+  const image_style = {
+
     width: "400px",
     heigh: "400px"
  
@@ -162,10 +163,25 @@ export function Homepage({ signOut }) {
 
   };
 
+const app_style = { 
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "5px"
+
+
+    };
+
+const tab_style = {
+    width: "100%",
+
+    };
+
   
   return (    
 
-    <View className="App">
+    <View style={app_style}>
       <Image
       alt="logo"
       src={image_top}
@@ -175,7 +191,7 @@ export function Homepage({ signOut }) {
 
     <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>
 
-    <Tabs className='Tabs'
+    <Tabs style={tab_style}
       defaultValue={'Buy'}
       items={[
         { label: 'Buy', value: 'Buy', content: 

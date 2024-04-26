@@ -5,6 +5,7 @@ import { getNote } from "./graphql/queries";
 import { generateClient } from 'aws-amplify/api';
 import { getUrl } from 'aws-amplify/storage';  // Assuming getUrl needs to be imported like this
 import awsExports from './aws-exports';
+import "./App.css";
 import {
     Card,
     Image,
@@ -23,7 +24,6 @@ export const ItemView = (signOut) => {
     
     const { id } = useParams();
     const [note, setNote] = useState(null);
-    const { tokens } = useTheme();
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -50,9 +50,10 @@ export const ItemView = (signOut) => {
         if (id) {
             fetchNote();
         }
-    }, [id]);  // useEffect depends on `id` to rerun when `id` changes
+    }, [id]); 
 
     const image_style = { 
+   
       width: "400px",
       heigh: "400px"
    
@@ -62,31 +63,55 @@ export const ItemView = (signOut) => {
       float: "right"
   
     };  
+
+    const cardStyle = { 
+      borderRadius:"8px",
+      width: "400px",
+      height: "400px",
+      margin: "auto",
+      padding: "20px",
+      backgroundColor: "grey"
+
+    };
+
+    const app_style = { 
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "5px"
+  
+  
+      };
   
     
 
     return (
-        <View className="App">
+        <View style={app_style}>
 
-
+        <Flex>
         <Image
           alt="logo"
           src={image_top}
           style={image_style}
         />
+        </Flex>
 
-    <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>       
+        <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>
+  
 
-
-            <Card>
-                <Flex>
+            <Card style={cardStyle}>
+                <Flex direction="row">
                     {note && <>
                         <Text>{note.name}</Text>
-                        {note.price && <Badge>${note.price}</Badge>}
+                        {note.price && <Text>${note.price}</Text>}
                         {note.owner && <Text>({note.owner})</Text>}
-                        {note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}
-                        {note.image && <Image src={note.image.url.href} alt="Note Image" />}
+                        {note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}<br></br>
                     </>}
+                </Flex>
+
+                <Flex direction="row">
+                      {note && note.image && <Image src={note.image.url.href} alt="Note Image" />}
                 </Flex>
             </Card>
 
