@@ -9,15 +9,15 @@ import {
     Card,
     Image,
     View,
-    Heading,
     Flex,
     Badge,
     Text,
-    Button,
     useTheme,
+    Button
 } from '@aws-amplify/ui-react';
+import image_top from "./fit-3.png"; 
 
-export const ItemView = () => {
+export const ItemView = (signOut) => {
     const client = generateClient();
     Amplify.configure(awsExports);
     
@@ -35,10 +35,10 @@ export const ItemView = () => {
                 console.log("API Data:", apiData);
                 if (apiData.data && apiData.data.getNote) {
                     const noteData = apiData.data.getNote;
-                    const url = await getUrl({key: noteData.id});  // Use noteData.id instead of note.id
-                    noteData.image = url;  // Set the image URL in the note data
+                    const url = await getUrl({key: noteData.id});  
+                    noteData.image = url; 
 
-                    setNote(noteData);  // Now set the updated note data with the image URL
+                    setNote(noteData);  
                 } else {
                     console.error("No note found for the provided ID:", id);
                 }
@@ -52,8 +52,32 @@ export const ItemView = () => {
         }
     }, [id]);  // useEffect depends on `id` to rerun when `id` changes
 
+    const image_style = { 
+      width: "400px",
+      heigh: "400px"
+   
+    };
+
+    const button_style = {
+      float: "right"
+  
+    };  
+  
+    
+
     return (
-        <View backgroundColor={tokens.colors.background.secondary} padding={tokens.space.medium}>
+        <View className="App">
+
+
+        <Image
+          alt="logo"
+          src={image_top}
+          style={image_style}
+        />
+
+    <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>       
+
+
             <Card>
                 <Flex>
                     {note && <>
@@ -65,6 +89,9 @@ export const ItemView = () => {
                     </>}
                 </Flex>
             </Card>
+
+
+
         </View>
     );
 };

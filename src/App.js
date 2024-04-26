@@ -36,7 +36,7 @@ return   (
 
     <Routes>
       <Route path="/" element={<Homepage signOut={signOut} />} />
-      <Route path="/item/:id" element={<ItemView  />} />
+      <Route path="/item/:id" element={<ItemView signOut={signOut} />} />
 
     </Routes>
   </Router>
