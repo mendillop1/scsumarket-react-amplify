@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
+import { Footer } from "./Login/Footer"; 
+import { Header } from "./Login/Header";
 import {
   BrowserRouter as Router,
   Link as ReactRouterLink,
@@ -43,5 +45,10 @@ return   (
 
 }
 
-export default withAuthenticator(App)
+export default withAuthenticator(App, {
+  components: {
+    Header,
+    Footer
+  }
 
+});

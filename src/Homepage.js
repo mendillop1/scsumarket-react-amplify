@@ -49,6 +49,7 @@ export function Homepage({ signOut }) {
     fetchNotes();
   }, []);
 
+
   async function fetchNotes() {
     const apiData = await client.graphql({ query: listNotes });
     const notesFromAPI = apiData.data.listNotes.items;
@@ -66,6 +67,7 @@ export function Homepage({ signOut }) {
   async function createNote(event) {
     event.preventDefault();
     const user = await getCurrentUser();
+    getUserEmail();
     console.log(user);
     const form = new FormData(event.target);
     const image = form.get("image");
@@ -74,7 +76,7 @@ export function Homepage({ signOut }) {
       description: form.get("description"),
       image: image.name,
       price: form.get("price"),
-      owner: user.username
+      owner: user.username,
       
     };
     const result=await client.graphql({

@@ -65,10 +65,12 @@ export const ItemView = (signOut) => {
     };  
 
     const cardStyle = { 
+      display: "flex",
+      flexDirection: "column",
       borderRadius:"8px",
-      width: "400px",
-      height: "400px",
-      margin: "auto",
+      marginTop: "20px",  
+      width: "90%",
+      height: "auto",
       padding: "20px",
       backgroundColor: "grey"
 
@@ -83,6 +85,11 @@ export const ItemView = (signOut) => {
   
   
       };
+
+    const item_image_style = {
+      width: "300px",
+      height: "300px"
+    };
   
     
 
@@ -100,7 +107,7 @@ export const ItemView = (signOut) => {
         <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>
   
 
-            <Card style={cardStyle}>
+            <Flex style={cardStyle}>
                 <Flex direction="row">
                     {note && <>
                         <Text>{note.name}</Text>
@@ -110,10 +117,10 @@ export const ItemView = (signOut) => {
                     </>}
                 </Flex>
 
-                <Flex direction="row">
+                <Flex style={item_image_style} direction="column">
                       {note && note.image && <Image src={note.image.url.href} alt="Note Image" />}
                 </Flex>
-            </Card>
+            </Flex>
 
 
 
