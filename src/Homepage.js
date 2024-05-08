@@ -67,7 +67,6 @@ export function Homepage({ signOut }) {
   async function createNote(event) {
     event.preventDefault();
     const user = await getCurrentUser();
-    getUserEmail();
     console.log(user);
     const form = new FormData(event.target);
     const image = form.get("image");
