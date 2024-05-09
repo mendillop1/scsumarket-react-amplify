@@ -2,8 +2,9 @@ type Note @model @auth(rules: [{allow: owner}, {allow: public}, {allow: private}
   id: ID!
   name: String!
   description: String!
-  image: String
+  image: String!
   price: String!
   owner: String
+  contact: String
 }
  

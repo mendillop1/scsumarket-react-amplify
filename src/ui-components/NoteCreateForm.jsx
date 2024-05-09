@@ -12,6 +12,7 @@ import {
   Grid,
   TextAreaField,
   TextField,
+  useTheme,
 } from "@aws-amplify/ui-react";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import {
@@ -35,35 +36,36 @@ export default function NoteCreateForm(props) {
     overrides,
     ...rest
   } = props;
+  const { tokens } = useTheme();
   const initialValues = {
     name: "",
+    price: "",
     description: "",
     image: undefined,
-    price: "",
-    owner: "",
+    contact: "",
   };
   const [name, setName] = React.useState(initialValues.name);
+  const [price, setPrice] = React.useState(initialValues.price);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
   const [image, setImage] = React.useState(initialValues.image);
-  const [price, setPrice] = React.useState(initialValues.price);
-  const [owner, setOwner] = React.useState(initialValues.owner);
+  const [contact, setContact] = React.useState(initialValues.contact);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
+    setPrice(initialValues.price);
     setDescription(initialValues.description);
     setImage(initialValues.image);
-    setPrice(initialValues.price);
-    setOwner(initialValues.owner);
+    setContact(initialValues.contact);
     setErrors({});
   };
   const validations = {
     name: [{ type: "Required" }],
+    price: [{ type: "Required" }],
     description: [{ type: "Required" }],
     image: [],
-    price: [],
-    owner: [],
+    contact: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -87,15 +89,15 @@ export default function NoteCreateForm(props) {
       as="form"
       rowGap="15px"
       columnGap="15px"
-      padding="20px"
+      padding={tokens.space.large.value}
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
           name,
+          price,
           description,
           image,
-          price,
-          owner,
+          contact,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -150,7 +152,12 @@ export default function NoteCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Name"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Name</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         value={name}
@@ -159,10 +166,10 @@ export default function NoteCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
+              price,
               description,
               image,
-              price,
-              owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -177,8 +184,46 @@ export default function NoteCreateForm(props) {
         hasError={errors.name?.hasError}
         {...getOverrideProps(overrides, "name")}
       ></TextField>
+      <TextField
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Price $</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
+        isRequired={true}
+        isReadOnly={false}
+        value={price}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              price: value,
+              description,
+              image,
+              contact,
+            };
+            const result = onChange(modelFields);
+            value = result?.price ?? value;
+          }
+          if (errors.price?.hasError) {
+            runValidationTasks("price", value);
+          }
+          setPrice(value);
+        }}
+        onBlur={() => runValidationTasks("price", price)}
+        errorMessage={errors.price?.errorMessage}
+        hasError={errors.price?.hasError}
+        {...getOverrideProps(overrides, "price")}
+      ></TextField>
       <TextAreaField
-        label="Description"
+        label={
+          <span style={{ display: "inline-flex" }}>
+            <span>Description</span>
+            <span style={{ color: "red" }}>*</span>
+          </span>
+        }
         isRequired={true}
         isReadOnly={false}
         onChange={(e) => {
@@ -186,10 +231,10 @@ export default function NoteCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name,
+              price,
               description: value,
               image,
-              price,
-              owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -218,10 +263,10 @@ export default function NoteCreateForm(props) {
               if (onChange) {
                 const modelFields = {
                   name,
+                  price,
                   description,
                   image: value,
-                  price,
-                  owner,
+                  contact,
                 };
                 const result = onChange(modelFields);
                 value = result?.image ?? value;
@@ -235,10 +280,10 @@ export default function NoteCreateForm(props) {
               if (onChange) {
                 const modelFields = {
                   name,
+                  price,
                   description,
                   image: value,
-                  price,
-                  owner,
+                  contact,
                 };
                 const result = onChange(modelFields);
                 value = result?.image ?? value;
@@ -256,60 +301,32 @@ export default function NoteCreateForm(props) {
         ></StorageManager>
       </Field>
       <TextField
-        label="Price"
+        label="Contact"
         isRequired={false}
         isReadOnly={false}
-        value={price}
+        value={contact}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              description,
-              image,
-              price: value,
-              owner,
-            };
-            const result = onChange(modelFields);
-            value = result?.price ?? value;
-          }
-          if (errors.price?.hasError) {
-            runValidationTasks("price", value);
-          }
-          setPrice(value);
-        }}
-        onBlur={() => runValidationTasks("price", price)}
-        errorMessage={errors.price?.errorMessage}
-        hasError={errors.price?.hasError}
-        {...getOverrideProps(overrides, "price")}
-      ></TextField>
-      <TextField
-        label="Owner"
-        isRequired={false}
-        isReadOnly={false}
-        value={owner}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              description,
-              image,
               price,
-              owner: value,
+              description,
+              image,
+              contact: value,
             };
             const result = onChange(modelFields);
-            value = result?.owner ?? value;
+            value = result?.contact ?? value;
           }
-          if (errors.owner?.hasError) {
-            runValidationTasks("owner", value);
+          if (errors.contact?.hasError) {
+            runValidationTasks("contact", value);
           }
-          setOwner(value);
+          setContact(value);
         }}
-        onBlur={() => runValidationTasks("owner", owner)}
-        errorMessage={errors.owner?.errorMessage}
-        hasError={errors.owner?.hasError}
-        {...getOverrideProps(overrides, "owner")}
+        onBlur={() => runValidationTasks("contact", contact)}
+        errorMessage={errors.contact?.errorMessage}
+        hasError={errors.contact?.hasError}
+        {...getOverrideProps(overrides, "contact")}
       ></TextField>
       <Flex
         justifyContent="space-between"

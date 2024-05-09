@@ -30,6 +30,7 @@ export default function NoteUpdateForm(props) {
     image: "",
     price: "",
     owner: "",
+    contact: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [description, setDescription] = React.useState(
@@ -38,6 +39,7 @@ export default function NoteUpdateForm(props) {
   const [image, setImage] = React.useState(initialValues.image);
   const [price, setPrice] = React.useState(initialValues.price);
   const [owner, setOwner] = React.useState(initialValues.owner);
+  const [contact, setContact] = React.useState(initialValues.contact);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = noteRecord
@@ -48,6 +50,7 @@ export default function NoteUpdateForm(props) {
     setImage(cleanValues.image);
     setPrice(cleanValues.price);
     setOwner(cleanValues.owner);
+    setContact(cleanValues.contact);
     setErrors({});
   };
   const [noteRecord, setNoteRecord] = React.useState(noteModelProp);
@@ -69,9 +72,10 @@ export default function NoteUpdateForm(props) {
   const validations = {
     name: [{ type: "Required" }],
     description: [{ type: "Required" }],
-    image: [],
+    image: [{ type: "Required" }],
     price: [{ type: "Required" }],
     owner: [],
+    contact: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -101,9 +105,10 @@ export default function NoteUpdateForm(props) {
         let modelFields = {
           name,
           description,
-          image: image ?? null,
+          image,
           price,
           owner: owner ?? null,
+          contact: contact ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -169,6 +174,7 @@ export default function NoteUpdateForm(props) {
               image,
               price,
               owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -197,6 +203,7 @@ export default function NoteUpdateForm(props) {
               image,
               price,
               owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -213,7 +220,7 @@ export default function NoteUpdateForm(props) {
       ></TextField>
       <TextField
         label="Image"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={image}
         onChange={(e) => {
@@ -225,6 +232,7 @@ export default function NoteUpdateForm(props) {
               image: value,
               price,
               owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.image ?? value;
@@ -253,6 +261,7 @@ export default function NoteUpdateForm(props) {
               image,
               price: value,
               owner,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -281,6 +290,7 @@ export default function NoteUpdateForm(props) {
               image,
               price,
               owner: value,
+              contact,
             };
             const result = onChange(modelFields);
             value = result?.owner ?? value;
@@ -294,6 +304,35 @@ export default function NoteUpdateForm(props) {
         errorMessage={errors.owner?.errorMessage}
         hasError={errors.owner?.hasError}
         {...getOverrideProps(overrides, "owner")}
+      ></TextField>
+      <TextField
+        label="Contact"
+        isRequired={false}
+        isReadOnly={false}
+        value={contact}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              description,
+              image,
+              price,
+              owner,
+              contact: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.contact ?? value;
+          }
+          if (errors.contact?.hasError) {
+            runValidationTasks("contact", value);
+          }
+          setContact(value);
+        }}
+        onBlur={() => runValidationTasks("contact", contact)}
+        errorMessage={errors.contact?.errorMessage}
+        hasError={errors.contact?.hasError}
+        {...getOverrideProps(overrides, "contact")}
       ></TextField>
       <Flex
         justifyContent="space-between"
