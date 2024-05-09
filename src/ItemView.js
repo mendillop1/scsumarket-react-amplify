@@ -111,8 +111,8 @@ export const ItemView = (signOut) => {
             <Flex style={cardStyle}>
                 <Flex direction="row">
                     {note && <>
-                        <Text>{note.name}</Text>|
-                        {note.price && <Text>${note.price}</Text>}
+                        <Text><b>{note.name}</b></Text>|
+                        {note.price && <Text><b>${note.price}</b></Text>}
     
                     </>}
                 </Flex>
@@ -122,19 +122,19 @@ export const ItemView = (signOut) => {
                 </Flex>
 
                 <Flex direction="row">
-                      Date Posted:{note && note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}
+                      <b>Date Posted:</b>{note && note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}
                 </Flex>
 
                 <Flex direction="row">
-                      Seller:{note && note.owner && <Text>{note.owner}</Text>}
+                      <b>Seller:</b>{note && note.owner && <Text>{note.owner}</Text>}
                 </Flex>
 
                 <Flex direction="row">
-                      Contact:{note && note.contact && <Text>{note.contact}</Text>}
+                      <b>Contact</b>{note && note.contact && <Text>{note.contact}</Text>}
                 </Flex>
 
                 <Flex direction="column" >
-                      <Text>Item Description:</Text>
+                      <Text><b>Item Description:</b></Text>
                       {note && note.description}
                 </Flex>
             </Flex>
