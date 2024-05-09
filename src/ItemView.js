@@ -36,6 +36,7 @@ export const ItemView = (signOut) => {
                     noteData.image = url; 
 
                     setNote(noteData);  
+                  
                 } else {
                     console.error("No note found for the provided ID:", id);
                 }
@@ -129,7 +130,7 @@ export const ItemView = (signOut) => {
                 </Flex>
 
                 <Flex direction="row">
-                      Contact:{note.contact && <Text>{note.contact}</Text>}
+                      Contact:{note && note.contact && <Text>{note.contact}</Text>}
                 </Flex>
 
                 <Flex direction="column" >
