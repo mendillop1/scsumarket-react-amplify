@@ -43,17 +43,19 @@ export function Homepage({ signOut }) {
   const [notes, setNotes] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc'); 
   const [currentUser, setCurrentUser] = useState(null); 
-  const userNotes = notes.filter((note) => note.userId === currentUser?.username);
+  const userNotes = notes.filter((note) => note.owner === currentUser?.username);
 
   useEffect(() => {
     fetchNotes();
-    setCurrentUser(getCurrentUser()); 
   }, []);
 
 
   async function fetchNotes() {
     const apiData = await client.graphql({ query: listNotes });
     const notesFromAPI = apiData.data.listNotes.items;
+    const currentUser = await getCurrentUser(); 
+    setCurrentUser(currentUser);
+    console.log("Current User: ", currentUser.username);
     await Promise.all(
       notesFromAPI.map(async (note) => {
         if (note.image) {
@@ -105,6 +107,14 @@ const sortedNotes = [...notes].sort((a, b) => {
 
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
 });
+
+const sortedUserNotes = userNotes.sort((a, b) => {
+  const dateA = new Date(a.createdAt);
+  const dateB = new Date(b.createdAt);
+
+  return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+});
+
 
 const toggleSortOrder = () => {
         setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
@@ -315,21 +325,55 @@ const tab_style = {
           
           { label: 'Your Items', value: 'Your Items', content:
         
-              'your items'
+          <View>
+          <Flex justifyContent="space-between" alignItems="center" marginBottom="10px">
+              <Button onClick={toggleSortOrder}>
+                  Sort by Date ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+              </Button>
+          </Flex>
+
+          <Collection
+              wrap="wrap"
+              direction="row"
+              columns={3}
+              gap="10px"
+              items={sortedUserNotes.map((note) => ({
+                  ...note,
+                  key: note.id,
+              }))}
+              isSearchable
+              isPaginated
+              itemsPerPage={12}
+              searchNoResultsFound={
+                  <Flex justifyContent="center">
+                      <Text color="red.80" fontSize="1rem">
+                          Nothing found, please try again
+                      </Text>
+                  </Flex>
+              }
+              searchPlaceholder="Type to search..."
+              searchFilter={(note, keyword) =>
+                  note.name.toLowerCase().startsWith(keyword.toLowerCase())
+              }
+          >
+              {(note) => (
+                  <ReactRouterLink to={`/item/${note.id}`}>
+                      <Button key={note.id} style={button_style}>
+                          <View style={button_content}>
+                              {note.name} | ${note.price}
+                              <Image
+                                  src={note.image?.url}
+                                  alt={note.name}
+                                  style={item_image_style}
+                              />
+                          </View>
+                      </Button>
+                  </ReactRouterLink>
+              )}
+          </Collection>
+      </View>
 
 
-
-
-
-
-
-
-
-
-
-
-
-        
     
           }
         ]}
