@@ -190,12 +190,17 @@ const tab_style = {
   return (    
 
     <View style={app_style}>
+
+      <ReactRouterLink to="/"> 
+
       <Image
       alt="logo"
       src={image_top}
       style={image_style}
 
      />
+
+      </ReactRouterLink>
 
     <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>
 
@@ -357,7 +362,7 @@ const tab_style = {
               }
           >
               {(note) => (
-                  <ReactRouterLink to={`/item/${note.id}`}>
+                 
                       <Button key={note.id} style={button_style}>
                           <View style={button_content}>
                               {note.name} | ${note.price}
@@ -366,9 +371,10 @@ const tab_style = {
                                   alt={note.name}
                                   style={item_image_style}
                               />
+                              <Button onClick={() => deleteNote(note)}>Delete</Button>
                           </View>
                       </Button>
-                  </ReactRouterLink>
+          
               )}
           </Collection>
       </View>

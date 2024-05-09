@@ -30,10 +30,6 @@ export function App({ signOut }) {
 
 return   (
   <Router>
-    <Flex>
-      <ReactRouterLink to="/" component={Link}>Home</ReactRouterLink>
- 
-    </Flex>
 
     <Routes>
       <Route path="/" element={<Homepage signOut={signOut} />} />

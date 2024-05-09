@@ -13,6 +13,10 @@ import {
     Text,
     Button
 } from '@aws-amplify/ui-react';
+
+import {
+    Link as ReactRouterLink,
+  } from 'react-router-dom';
 import image_top from "./fit-3.png"; 
 
 export const ItemView = (signOut) => {
@@ -97,11 +101,21 @@ export const ItemView = (signOut) => {
         <View style={app_style}>
 
         <Flex>
-        <Image
-          alt="logo"
-          src={image_top}
-          style={image_style}
-        />
+
+
+        <ReactRouterLink to="/"> 
+
+            <Image
+                alt="logo"
+                src={image_top}
+                style={image_style}
+
+            />
+
+      </ReactRouterLink>
+
+
+
         </Flex>
 
         <Button onClick={signOut} variation="primary" style={button_style}>Sign Out </Button>
