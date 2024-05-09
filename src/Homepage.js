@@ -20,10 +20,7 @@ import {
 } from "@aws-amplify/ui-react";
 
 import {
-    BrowserRouter as Router,
     Link as ReactRouterLink,
-    Routes,
-    Route,
   } from 'react-router-dom';
 
 import { listNotes } from "./graphql/queries";
@@ -67,7 +64,6 @@ export function Homepage({ signOut }) {
   async function createNote(event) {
     event.preventDefault();
     const user = await getCurrentUser();
-    console.log(user);
     const form = new FormData(event.target);
     const image = form.get("image");
     const data = {
@@ -76,6 +72,7 @@ export function Homepage({ signOut }) {
       image: image.name,
       price: form.get("price"),
       owner: user.username,
+      contact: form.get("contact")
       
     };
     const result=await client.graphql({
@@ -207,7 +204,8 @@ const tab_style = {
                 name: note.name,
                 image: note.image,
                 price: note.price,
-                owner: note.owner
+                owner: note.owner,
+                contact: note.contact
                 }))}
                 isSearchable
                 isPaginated
@@ -274,6 +272,15 @@ const tab_style = {
             </Flex>
 
             <Flex>
+                <TextField
+                  style={text_field_style}
+                  name="contact"
+                  label="Contact Info"
+                  required
+                />
+            </Flex>
+
+            <Flex>
                 <TextAreaField
                   style={text_field_style}
                   name="description"
@@ -309,8 +316,7 @@ const tab_style = {
         
               'your items'
         
-        
-        
+    
           }
         ]}
 

@@ -7,13 +7,10 @@ import { getUrl } from 'aws-amplify/storage';  // Assuming getUrl needs to be im
 import awsExports from './aws-exports';
 import "./App.css";
 import {
-    Card,
     Image,
     View,
     Flex,
-    Badge,
     Text,
-    useTheme,
     Button
 } from '@aws-amplify/ui-react';
 import image_top from "./fit-3.png"; 
@@ -55,7 +52,7 @@ export const ItemView = (signOut) => {
     const image_style = { 
    
       width: "400px",
-      heigh: "400px"
+      height: "300px"
    
     };
 
@@ -70,9 +67,11 @@ export const ItemView = (signOut) => {
       borderRadius:"8px",
       marginTop: "20px",  
       width: "90%",
-      height: "auto",
       padding: "20px",
-      backgroundColor: "grey"
+      backgroundColor: "white",
+      border: "1px solid #ccc",
+      boxShadow: "2px 2px 6px 2px #ccc",
+      
 
     };
 
@@ -89,6 +88,7 @@ export const ItemView = (signOut) => {
     const item_image_style = {
       width: "300px",
       height: "300px"
+      
     };
   
     
@@ -110,15 +110,31 @@ export const ItemView = (signOut) => {
             <Flex style={cardStyle}>
                 <Flex direction="row">
                     {note && <>
-                        <Text>{note.name}</Text>
+                        <Text>{note.name}</Text>|
                         {note.price && <Text>${note.price}</Text>}
-                        {note.owner && <Text>({note.owner})</Text>}
-                        {note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}<br></br>
+    
                     </>}
                 </Flex>
 
                 <Flex style={item_image_style} direction="column">
-                      {note && note.image && <Image src={note.image.url.href} alt="Note Image" />}
+                      {note && note.image && <Image src={note.image.url.href} style={item_image_style} alt="Note Image" /> } 
+                </Flex>
+
+                <Flex direction="row">
+                      Date Posted:{note && note.createdAt && <Text>{new Date(note.createdAt).toLocaleDateString()}</Text>}
+                </Flex>
+
+                <Flex direction="row">
+                      Seller:{note && note.owner && <Text>{note.owner}</Text>}
+                </Flex>
+
+                <Flex direction="row">
+                      Contact:{note.contact && <Text>{note.contact}</Text>}
+                </Flex>
+
+                <Flex direction="column" >
+                      <Text>Item Description:</Text>
+                      {note && note.description}
                 </Flex>
             </Flex>
 

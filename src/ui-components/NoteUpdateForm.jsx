@@ -72,7 +72,7 @@ export default function NoteUpdateForm(props) {
   const validations = {
     name: [{ type: "Required" }],
     description: [{ type: "Required" }],
-    image: [],
+    image: [{ type: "Required" }],
     price: [{ type: "Required" }],
     owner: [],
     contact: [],
@@ -105,7 +105,7 @@ export default function NoteUpdateForm(props) {
         let modelFields = {
           name,
           description,
-          image: image ?? null,
+          image,
           price,
           owner: owner ?? null,
           contact: contact ?? null,
@@ -220,7 +220,7 @@ export default function NoteUpdateForm(props) {
       ></TextField>
       <TextField
         label="Image"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={image}
         onChange={(e) => {

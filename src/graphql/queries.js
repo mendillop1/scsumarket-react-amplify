@@ -10,6 +10,7 @@ export const getNote = /* GraphQL */ `
       image
       price
       owner
+      contact
       createdAt
       updatedAt
       __typename
@@ -30,6 +31,7 @@ export const listNotes = /* GraphQL */ `
         image
         price
         owner
+        contact
         createdAt
         updatedAt
         __typename
