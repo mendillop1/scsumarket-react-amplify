@@ -41,6 +41,7 @@ Amplify.configure(awsExports);
 export function Homepage({ signOut }) {
 
   const [notes, setNotes] = useState([]);
+  const [sortOrder, setSortOrder] = useState('asc'); 
 
   useEffect(() => {
     fetchNotes();
@@ -94,6 +95,17 @@ export function Homepage({ signOut }) {
       variables: { input: { id } },
     });
   }
+
+const sortedNotes = [...notes].sort((a, b) => {
+    const dateA = new Date(a.createdAt);
+    const dateB = new Date(b.createdAt);
+
+    return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+});
+
+const toggleSortOrder = () => {
+        setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+};
 
   const form_style = {
     display: "flex",
@@ -157,7 +169,7 @@ export function Homepage({ signOut }) {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "400px",
+    width: "380px",
 
   };
 
@@ -193,54 +205,55 @@ const tab_style = {
       defaultValue={'Buy'}
       items={[
         { label: 'Buy', value: 'Buy', content: 
-              <Collection
-                wrap="wrap" 
-                direction=  "row"
-                templateColumns="1fr 1fr 1fr"
+
+        <View>
+        <Flex justifyContent="space-between" alignItems="center" marginBottom="10px">
+            <Button onClick={toggleSortOrder}>
+                Sort by Date ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+            </Button>
+        </Flex>
+
+
+        <Collection
+                wrap="wrap"
+                direction="row"
+                columns={3}
                 gap="10px"
-                items={notes.map((note) => ({
-                ...note,
-                key: note.id,
-                name: note.name,
-                image: note.image,
-                price: note.price,
-                owner: note.owner,
-                contact: note.contact
+                items={sortedNotes.map((note) => ({
+                    ...note,
+                    key: note.id,
                 }))}
                 isSearchable
                 isPaginated
                 itemsPerPage={12}
                 searchNoResultsFound={
-                <Flex justifyContent="center">
-                   <Text color="red.80" fontSize="1rem">
-                      Nothing found, please try again
-                  </Text>
-                </Flex>}
-        
+                    <Flex justifyContent="center">
+                        <Text color="red.80" fontSize="1rem">
+                            Nothing found, please try again
+                        </Text>
+                    </Flex>
+                }
                 searchPlaceholder="Type to search..."
-                searchFilter={(notes, keyword) =>
-                notes.name.toLowerCase().startsWith(keyword.toLowerCase())
-                }>
-
+                searchFilter={(note, keyword) =>
+                    note.name.toLowerCase().startsWith(keyword.toLowerCase())
+                }
+            >
                 {(note) => (
-                
-            <ReactRouterLink to={`/item/${note.id}`} component={Link}>
-                    
-             <Button grow="1" key={note.id} style={buttonStyle}>
-
-                  <View style={button_content}>
-                    {note.name} | ${note.price}    
-                    <Image
-                      src= {note.image.url.href }
-                      alt={note.name}
-                      style={item_image_style}
-                     />
-                  </View>
-                  </Button>
-                </ReactRouterLink>
-           
+                    <ReactRouterLink to={`/item/${note.id}`}>
+                        <Button key={note.id} style={button_style}>
+                            <View style={button_content}>
+                                {note.name} | ${note.price}
+                                <Image
+                                    src={note.image?.url}
+                                    alt={note.name}
+                                    style={item_image_style}
+                                />
+                            </View>
+                        </Button>
+                    </ReactRouterLink>
                 )}
-              </Collection>,},
+            </Collection>
+        </View>,},
 
             
             
