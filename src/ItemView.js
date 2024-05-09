@@ -70,8 +70,7 @@ export const ItemView = (signOut) => {
       width: "90%",
       padding: "20px",
       backgroundColor: "white",
-      border: "1px solid #ccc",
-      boxShadow: "2px 2px 6px 2px #ccc",
+      border: "1px solid grey",
       
 
     };
@@ -130,7 +129,7 @@ export const ItemView = (signOut) => {
                 </Flex>
 
                 <Flex direction="row">
-                      <b>Contact</b>{note && note.contact && <Text>{note.contact}</Text>}
+                      <b>Contact:</b>{note && note.contact && <Text>{note.contact}</Text>}
                 </Flex>
 
                 <Flex direction="column" >

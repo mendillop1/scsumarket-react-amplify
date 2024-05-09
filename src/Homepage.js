@@ -31,7 +31,7 @@ import {
 
 import {Amplify} from 'aws-amplify';
 import awsExports from './aws-exports'; 
-import { generateClient } from 'aws-amplify/api';
+import { generateClient, get } from 'aws-amplify/api';
 import { getCurrentUser } from "aws-amplify/auth";
 import image_top from "./fit-3.png"; 
 
@@ -42,9 +42,12 @@ export function Homepage({ signOut }) {
 
   const [notes, setNotes] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc'); 
+  const [currentUser, setCurrentUser] = useState(null); 
+  const userNotes = notes.filter((note) => note.userId === currentUser?.username);
 
   useEffect(() => {
     fetchNotes();
+    setCurrentUser(getCurrentUser()); 
   }, []);
 
 
@@ -114,9 +117,8 @@ const toggleSortOrder = () => {
     alignItems: "center",
     padding: "20px",
     margin: "20px",
-    border: "1px solid #ccc",
+    border: "1px solid grey",
     borderRadius: "5px",
-    boxShadow: "2px 2px 6px 2px #ccc",
     width: "400px",
     maxWidth: "80%",
   };
@@ -144,20 +146,6 @@ const toggleSortOrder = () => {
  
   };
 
-  const buttonStyle = {
-    width: "380px",
-    height: "380px",
-    margin: "20px",
-    marginLeft:"20px",
-    padding: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    boxShadow: "2px 2px 6px 2px #ccc",
-    maxWidth:"400px"
-
-   
-  };
-
   const item_image_style = {
     width: "300px",
     height: "300px",
@@ -169,7 +157,7 @@ const toggleSortOrder = () => {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "380px",
+    width: "350px",
 
   };
 
@@ -328,6 +316,19 @@ const tab_style = {
           { label: 'Your Items', value: 'Your Items', content:
         
               'your items'
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
           }
